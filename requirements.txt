@@ -2,6 +2,7 @@ langchain
 langchain-community
 langchain-huggingface
 langchain-text-splitters
+langchain-openai
 sentence-transformers
 huggingface-hub
 chromadb
@@ -12,3 +13,6 @@ python-docx
 torch
 transformers
 llama-cpp-python
+pandas
+ragas
+datasets

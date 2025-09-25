@@ -69,12 +69,37 @@ def load_resources():
     
     return db, llm, None
 
+def get_rag_chain(llm, retriever):
+    """Crea y devuelve la cadena RAG completa."""
+    prompt = PromptTemplate(template=PROMPT_TEMPLATE, input_variables=["context", "question"])
+    
+    rag_chain = (
+        prompt
+        | llm
+        | StrOutputParser()
+    )
+    return rag_chain
+
+def log_feedback(rating: str):
+    """Registra el feedback del usuario en un archivo CSV."""
+    feedback_data = st.session_state.last_response_data
+    feedback_data['rating'] = rating
+    
+    df = pd.DataFrame([feedback_data])
+    
+    try:
+        if os.path.exists("feedback.csv"):
+            df.to_csv("feedback.csv", mode='a', header=False, index=False, encoding='utf-8')
+        else:
+            df.to_csv("feedback.csv", mode='w', header=True, index=False, encoding='utf-8')
+    except Exception as e:
+        st.error(f"Error al guardar el feedback: {e}")
+
 def main():
     st.title("🤖 Consulta de Evidencia en Tecnologías Sanitarias (Local)")
     st.caption("Este prototipo usa el modelo Llama-3.1-8B cargado localmente.")
     st.caption("Autor: Julián Sánchez Viamonte")
 
-    # Cargar los recursos al iniciar la app.
     db, llm, error_message = load_resources()
 
     if error_message:
@@ -94,55 +119,51 @@ def main():
     )
 
     # --- Lógica de la Aplicación ---
-
-    # Inicializar session_state para guardar la última respuesta y evitar feedback duplicado
-    if 'last_response' not in st.session_state:
-        st.session_state.last_response = ""
     if 'feedback_given' not in st.session_state:
         st.session_state.feedback_given = False
+    if 'last_response_data' not in st.session_state:
+        st.session_state.last_response_data = None
 
     if st.button("🔍 Buscar") and query_text:
-        st.session_state.feedback_given = False # Resetear feedback en cada nueva búsqueda
+        st.session_state.feedback_given = False
+        st.session_state.last_response_data = None
         with st.spinner("Buscando en los documentos y generando respuesta con el modelo local..."):
-            
-            # --- Lógica RAG (Retrieval-Augmented Generation) ---
             retriever = db.as_retriever(search_kwargs={'k': k_value})
-            retrieved_docs = retriever.invoke(query_text)
-
-            formatted_context = ""
-            for i, doc in enumerate(retrieved_docs):
-                formatted_context += f"### Fuente [{i+1}]\n"
-                formatted_context += f"Documento: {doc.metadata.get('source', 'N/A').replace('documentos\\', '')}\n"
-                formatted_context += f"Contenido: {doc.page_content}\n\n"
-
-            prompt = PromptTemplate(template=PROMPT_TEMPLATE, input_variables=["context", "question"])
-            
-            rag_chain = prompt | llm | StrOutputParser()
+            rag_chain = get_rag_chain(llm, retriever) # Usar la función refactorizada
 
             try:
+                retrieved_docs = retriever.invoke(query_text)
+                formatted_context = ""
+                for i, doc in enumerate(retrieved_docs):
+                    formatted_context += f"### Fuente [{i+1}]\n"
+                    formatted_context += f"Documento: {doc.metadata.get('source', 'N/A').replace('documentos\\', '')}\n"
+                    formatted_context += f"Contenido: {doc.page_content}\n\n"
+
                 response = rag_chain.invoke({"context": formatted_context, "question": query_text})
-                st.subheader("Respuesta Generada")
-                st.markdown(response)
                 
-                # Guardar la respuesta y contexto para el feedback
                 st.session_state.last_response_data = {
                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     "question": query_text,
                     "answer": response,
                     "context": formatted_context
                 }
-
-                with st.expander("Ver fuentes utilizadas"):
-                    st.markdown(formatted_context)
-
             except Exception as e:
                 st.error(f"Ocurrió un error al generar la respuesta: {e}")
+                st.session_state.last_response_data = None
 
-    # --- Sistema de Feedback ---
-    if st.session_state.last_response:
+    # --- Mostrar Respuesta y Sistema de Feedback ---
+    if st.session_state.last_response_data:
+        st.subheader("Respuesta Generada")
+        st.markdown(st.session_state.last_response_data["answer"])
+
+        with st.expander("Ver fuentes utilizadas"):
+            st.markdown(st.session_state.last_response_data["context"])
+        
+        st.write("\n---")
+        st.write("**¿Fue útil esta respuesta?**")
+
         if not st.session_state.feedback_given:
-            st.write("\n---")
-            col1, col2 = st.columns([1, 10])
+            col1, col2, _ = st.columns([1, 1, 5])
             with col1:
                 if st.button("👍"):
                     log_feedback(rating="👍 Buena respuesta")
