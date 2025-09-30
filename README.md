@@ -2,13 +2,12 @@
 
 **Autor:** Julián Sánchez Viamonte
 
-## 1. Objetivos del Proyecto
+## 1. Objetivos 
 
 Este proyecto implementa un sistema de **Generación Aumentada por Recuperación (RAG)** diseñado para permitir la consulta en lenguaje natural de una base de conocimiento privada compuesta por informes y documentos de Evaluaciones de Tecnologías Sanitarias (ETS).
 
-Los objetivos principales son:
 
-- **Respuestas Basadas en Evidencia:** Asegurar que todas las respuestas generadas por el sistema se basen estrictamente en el contenido de los documentos proporcionados, evitando la invención de información (alucinaciones).
+- **Respuestas Basadas en Evidencia:** Asegurar que las las respuestas generadas por el sistema se basen estrictamente en el contenido de los documentos proporcionados, evitando la invención de información (alucinaciones).
 - **Trazabilidad y Confianza:** Proveer citas en línea en las respuestas generadas, permitiendo al usuario final verificar qué fragmento de qué documento fuente respalda cada afirmación.
 - **Interfaz Intuitiva:** Ofrecer una interfaz de usuario web simple e interactiva para que usuarios no técnicos puedan realizar consultas complejas fácilmente.
 - **Arquitectura Local y Abierta:** Construir el sistema utilizando exclusivamente modelos y herramientas de código abierto, garantizando la privacidad de los datos y la soberanía sobre la infraestructura.
