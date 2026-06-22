@@ -1,4 +1,4 @@
-# UniTES · Facultad de Medicina · Universidad Nacional de Mar del Plata (UNMdP)
+# UniTES 
 
 ## BRISA-KG
 
@@ -128,3 +128,5 @@ Para migrar los datos a un motor PostgreSQL:
 
 #### Opción 3: Importación Directa SQL
 También es posible importar directamente el archivo [brisa_schema_data.sql](file:///c:/Users/jsanc/Proyectos%20IA/Brisa_grafo_RAG/brisa_schema_data.sql) en el cliente de base de datos para reconstruir la estructura y los registros del corpus.
+
+UniTES · Facultad de Medicina · Universidad Nacional de Mar del Plata (UNMdP)
