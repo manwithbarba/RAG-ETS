@@ -1,6 +1,6 @@
 # UniTES · Facultad de Medicina · Universidad Nacional de Mar del Plata (UNMdP)
 
-## BRISA-KG: Consolidación Relacional, Depuración Epidemiológica y Supergrafo Temático Multicapa de la Base Regional de Informes de Evaluación de Tecnologías en Salud (2022-2026)
+## BRISA-KG
 
 Este repositorio contiene el sistema de ingeniería de datos y visualización interactiva desarrollado bajo el marco institucional de UniTES (Facultad de Medicina, UNMdP). El objetivo del proyecto es la consolidación, normalización y análisis relacional del corpus de la Base Regional de Informes de Evaluación de Tecnologías en Salud de las Américas (BRISA) para el periodo 2022-2026.
 
@@ -8,7 +8,7 @@ Este repositorio contiene el sistema de ingeniería de datos y visualización in
 
 ### 1. Resumen Metodológico del Proceso
 
-El desarrollo de este sistema de visualización y persistencia estructurada siguió un procedimiento académico dividido en cuatro fases:
+El desarrollo de este sistema de visualización y persistencia estructurada se dividió en cuatro fases:
 
 ```mermaid
 graph TD
@@ -25,8 +25,8 @@ graph TD
 
 ### 2. Fase I: Depuración Epidemiológica y Criterios de Exclusión
 
-#### Justificación Académica
-Durante el periodo 2020-2022, la producción científica y los informes de evaluación de tecnologías sanitarias (ETS) presentaron una alta concentración de registros dedicados a la COVID-19 y la infección por SARS-CoV-2. Para realizar un análisis estructural de la agenda de investigación en salud convencional (patologías oncológicas, cardiovasculares, neurológicas y crónicas), se requirió aislar la distorsión estadística generada por la concentración de publicaciones sobre dicha patología.
+#### Justificación
+Durante el periodo 2020-2022, la producción científica y los informes de evaluación de tecnologías sanitarias (ETS) presentaron una elevada concentración de registros dedicados a la COVID-19 y la infección por SARS-CoV-2. Para realizar un análisis estructural de la agenda de investigación en salud convencional (patologías oncológicas, cardiovasculares, neurológicas y crónicas), se buscó aislar la distorsión generada por la concentración de publicaciones sobre dicha patología.
 
 #### Algoritmo de Exclusión Selectiva
 El script [brisa_cleaner.py](file:///c:/Users/jsanc/Proyectos%20IA/Brisa_grafo_RAG/brisa_cleaner.py) aplicó expresiones regulares compuestas en los campos de Título, Resumen/Abstract, Palabras Clave y Descriptores de Asunto:
@@ -62,7 +62,7 @@ Se generó la base de datos local [brisa.db](file:///c:/Users/jsanc/Proyectos%20
 #### Resolución de la Saturación Cognitiva
 La representación explícita de cada informe individual en visualizadores de redes tradicionales genera superposición de enlaces (oclusión de red) que reduce la legibilidad.
 
-Para este grafo temático multicapa (periodo 2022-2026, ~1,208 informes activos), se omitió la representación de los documentos individuales en el lienzo. En su lugar, el sistema modela relaciones de co-ocurrencia agregadas entre tres dimensiones fundamentales:
+Para este grafo temático multicapa, se omitió la representación de los documentos individuales en el lienzo. En su lugar, el sistema modela relaciones de co-ocurrencia agregadas entre tres dimensiones fundamentales:
 
 - **Estructura Multicapa de Tres Columnas**:
   - **Columna Izquierda (Países)**: 14 nodos correspondientes al origen geográfico de las publicaciones.
