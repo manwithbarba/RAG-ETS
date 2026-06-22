@@ -122,7 +122,7 @@ Para migrar los datos a un motor PostgreSQL:
    ```
 2. Ejecute el script [brisa_db_loader.py](file:///c:/Users/jsanc/Proyectos%20IA/Brisa_grafo_RAG/brisa_db_loader.py) con las credenciales del servidor:
    ```bash
-   python brisa_db_loader.py --postgres --host localhost --port 5432 --dbname brisa_db --user postgres
+   python brisa_db_loader.py --postgres --host localhost --port xxxx --dbname brisa_db --user postgres
    ```
    El script solicitará las credenciales e introducirá los registros en un bloque transaccional.
 
